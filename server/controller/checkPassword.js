@@ -21,17 +21,16 @@ const checkPassword = async (req, res) => {
       email: user.email,
     };
 
-    const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY);
-    // const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
-    //   expiresIn: '1d',
-    // });
+    const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
+      expiresIn: '1d',
+    });
 
     const cookieOptions = {
       httpOnly: true,
       secure: true,
     };
 
-    return res.cookie('token', token).status(200).json({
+    return res.status(200).json({
       message: 'Login successfully',
       token: token,
       success: true,
@@ -45,4 +44,3 @@ const checkPassword = async (req, res) => {
 };
 
 module.exports = checkPassword;
- 
