@@ -3,7 +3,7 @@ const UserModel = require('../models/UserModel');
 
 const updateUserDetails = async (req, res) => {
   try {
-    const token = req.cookies.token || '';
+    const { token } = req.headers;
 
     const user = await getUserDetailsFromToken(token);
     const { name, profile_pic } = req.body;

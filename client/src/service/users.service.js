@@ -15,6 +15,12 @@ export default class UserService {
     const response = await axios.post('/api/password', passwordData);
     return response;
   }
+  static async updateUser(token, updatedUserData) {
+    const response = await axios.post('/api/update-user', updatedUserData, {
+      headers: { token },
+    });
+    return response;
+  }
 
   static async userDetail(token) {
     const response = await axios.get('/api/user-details', {
