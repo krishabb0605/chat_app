@@ -12,7 +12,7 @@ import SearchUser from './SearchUser';
 const Sidebar = () => {
   const user = useSelector((state) => state?.user);
   const [editUserOpen, setEditUserOpen] = useState(false);
-  const [openSearchUser, setOpenSearchUser] = useState(true);
+  const [openSearchUser, setOpenSearchUser] = useState(false);
   const [allUser, setAllUser] = useState([]);
 
   return (

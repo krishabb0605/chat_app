@@ -8,7 +8,7 @@ const Avtar = ({ userId, name, imageUrl, width, height }) => {
     if (splitName.length > 1) {
       avtarName = splitName[0][0] + splitName[1][0];
     } else {
-      avtarName = splitName[0];
+      avtarName = splitName[0][0];
     }
   }
 

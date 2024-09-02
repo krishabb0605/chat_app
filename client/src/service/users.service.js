@@ -28,4 +28,9 @@ export default class UserService {
     });
     return response;
   }
+
+  static async searchUser(query) {
+    const response = await axios.post('/api/search-user', query);
+    return response;
+  }
 }
