@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import uploadFile from '../helpers/uploadFile';
-import axios from 'axios';
+import UserService from '../service/users.service';
 import toast from 'react-hot-toast';
 
 const RegisterPage = () => {
@@ -49,9 +49,8 @@ const RegisterPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/register`;
     try {
-      const response = await axios.post(URL, data);
+      const response = await UserService.register(data);
       toast.success(response.data.message);
       if (response.data.success) {
         setData({

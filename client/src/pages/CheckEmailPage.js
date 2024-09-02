@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import UserService from '../service/users.service';
 import toast from 'react-hot-toast';
 import { PiUserCircle } from 'react-icons/pi';
 
@@ -24,9 +24,8 @@ const CheckEmailPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/email`;
     try {
-      const response = await axios.post(URL, data);
+      const response = await UserService.checkEmail(data);
       toast.success(response.data.message);
 
       if (response.data.success) {

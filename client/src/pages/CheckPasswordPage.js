@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Avtar } from '../components';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../redux/userSlice';
+import UserService from '../service/users.service';
 
 const CheckPasswordPage = () => {
   const [data, setData] = useState({
@@ -10,6 +12,7 @@ const CheckPasswordPage = () => {
   });
   const navigate = useNavigate();
   const { state } = useLocation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!state?.name) {
@@ -31,22 +34,18 @@ const CheckPasswordPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/password`;
-
     try {
-      const response = await axios({
-        method: 'post',
-        url: URL,
-        data: {
-          userId: state?._id,
-          password: data.password,
-        },
-        withCredetials: true,
+      const response = await UserService.checkPassword({
+        userId: state?._id,
+        password: data.password,
       });
+
       toast.success(response.data.message);
 
       if (response.data.success) {
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('token', response?.data?.token);
+        dispatch(setToken(response?.data?.token));
+
         setData({
           password: '',
         });
