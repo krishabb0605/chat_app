@@ -1,10 +1,16 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { logout, setUser } from '../redux/userSlice';
+import {
+  logout,
+  setOnlineUser,
+  setSocketConnection,
+  setUser,
+} from '../redux/userSlice';
 import { Sidebar } from '../components';
 import UserService from '../service/users.service';
 import logo from '../assets/logo.png';
+import io from 'socket.io-client';
 
 const Home = () => {
   const user = useSelector((state) => state.user);
@@ -32,6 +38,26 @@ const Home = () => {
 
   useEffect(() => {
     fetchUserDetails();
+  }, []);
+
+  // socket connction
+
+  useEffect(() => {
+    const socketConnection = io(process.env.REACT_APP_BACKEND_URL, {
+      auth: {
+        token: localStorage.getItem('token'),
+      },
+    });
+
+    dispatch(setSocketConnection(socketConnection));
+
+    socketConnection.on('onlineUser', (data) => {
+      dispatch(setOnlineUser(data));
+    });
+
+    return () => {
+      socketConnection.disconnect();
+    };
   }, []);
 
   return (

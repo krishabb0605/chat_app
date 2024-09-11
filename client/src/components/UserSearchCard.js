@@ -2,7 +2,7 @@ import React from 'react';
 import Avtar from './Avtar';
 import { Link } from 'react-router-dom';
 
-const UserSearchCard = ({ user ,onClose}) => {
+const UserSearchCard = ({ user, onClose }) => {
   return (
     <Link
       to={'/' + user._id}
@@ -15,6 +15,7 @@ const UserSearchCard = ({ user ,onClose}) => {
           height={50}
           name={user?.name}
           imageUrl={user?.profile_pic}
+          userId={user?._id}
         />
       </div>
       <div>

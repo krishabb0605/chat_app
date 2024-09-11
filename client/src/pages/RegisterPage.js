@@ -61,7 +61,6 @@ const RegisterPage = () => {
         });
         navigate('/email');
       }
-      console.log('response', response);
     } catch (error) {
       toast.error(error?.response?.data?.message);
       console.log({ error });
