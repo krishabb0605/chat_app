@@ -200,6 +200,7 @@ const MessagePage = () => {
                   {msg?.imageUrl && (
                     <img
                       src={msg?.imageUrl}
+                      alt='uploaded'
                       className='w-full h-full object-scale-down'
                     />
                   )}

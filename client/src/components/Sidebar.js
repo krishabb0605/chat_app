@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IoChatbubbleEllipses } from 'react-icons/io5';
 import { FaUserPlus, FaImage, FaVideo } from 'react-icons/fa';
 import { BiLogOut } from 'react-icons/bi';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Avtar from './Avtar';
 import { useDispatch, useSelector } from 'react-redux';
 import EditUserDetails from './EditUserDetails';
