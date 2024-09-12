@@ -20,6 +20,10 @@ const Home = () => {
 
   const fetchUserDetails = useCallback(async () => {
     try {
+      if (!localStorage.getItem('token')) {
+        navigate('/email');
+        return;
+      }
       const response = await UserService.userDetail(
         localStorage.getItem('token')
       );
