@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
@@ -18,7 +18,7 @@ const Home = () => {
   const location = useLocation();
   const basePath = location.pathname === '/';
 
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = useCallback(async () => {
     try {
       const response = await UserService.userDetail(
         localStorage.getItem('token')
@@ -33,11 +33,11 @@ const Home = () => {
     } catch (error) {
       console.log('error while fetching details', error);
     }
-  };
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [fetchUserDetails]);
 
   // socket connction
 
@@ -57,7 +57,7 @@ const Home = () => {
     return () => {
       socketConnection.disconnect();
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className='grid lg:grid-cols-[300px,1fr] h-screen max-h-screen'>

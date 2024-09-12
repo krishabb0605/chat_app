@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import Loading from './Loading';
 import UserSearchCard from './UserSearchCard';
@@ -11,7 +11,7 @@ const SearchUser = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
 
-  const handleSearchUser = async () => {
+  const handleSearchUser = useCallback(async () => {
     try {
       setLoading(true);
       const response = await UserService.searchUser({ search });
@@ -21,11 +21,11 @@ const SearchUser = ({ onClose }) => {
       console.log(error);
       toast.error(error?.response?.data?.message);
     }
-  };
+  }, [search]);
 
   useEffect(() => {
     handleSearchUser();
-  }, [search]);
+  }, [handleSearchUser]);
 
   return (
     <div className='fixed top-0 bottom-0 left-0 right-0 bg-slate-700 bg-opacity-40 p-2 z-10'>

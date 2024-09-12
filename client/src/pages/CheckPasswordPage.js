@@ -18,7 +18,7 @@ const CheckPasswordPage = () => {
     if (!state?.name) {
       navigate('/email');
     }
-  }, []);
+  }, [navigate, state?.name]);
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
