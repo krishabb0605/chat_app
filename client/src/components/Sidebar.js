@@ -138,6 +138,7 @@ const Sidebar = () => {
                     name={conv?.userDetails?.name}
                     height={40}
                     width={40}
+                    userId={conv?.userDetails?._id}
                   />
                 </div>
 

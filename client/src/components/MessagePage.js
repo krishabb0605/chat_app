@@ -24,6 +24,7 @@ const MessagePage = () => {
     email: '',
     profile_pic: '',
     online: false,
+    _id: '',
   });
 
   const [message, setMessage] = useState({
@@ -42,7 +43,7 @@ const MessagePage = () => {
   useEffect(() => {
     if (currentMessage.current) {
       currentMessage.current.scrollIntoView({
-        behaviour: 'smooth',
+        behavior: 'smooth',
         block: 'end',
       });
     }
