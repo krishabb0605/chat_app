@@ -9,7 +9,7 @@ const { app, server } = require('./socket/index');
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: JSON.parse(process.env.FRONTEND_URL_ARRAY),
     credentials: true,
   })
 );

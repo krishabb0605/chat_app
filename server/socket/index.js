@@ -17,7 +17,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL,
+    origin: JSON.parse(process.env.FRONTEND_URL_ARRAY),
     credentials: true,
   },
 });
@@ -173,7 +173,10 @@ io.on('connection', async (socket) => {
 
   // disconnect
   socket.on('disconnect', () => {
-    onlineUser.delete(user?._id.toString());
+    if (user?._id) {
+      onlineUser.delete(user?._id?.toString());
+      io.emit('onlineUser', Array.from(onlineUser));
+    }
     console.log('disconnect user', socket.id);
   });
 });
