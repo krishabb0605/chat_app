@@ -9,6 +9,7 @@ import EditUserDetails from './EditUserDetails';
 import { FiArrowUpLeft } from 'react-icons/fi';
 import SearchUser from './SearchUser';
 import { logout } from '../redux/userSlice';
+import Loading from './Loading';
 
 const Sidebar = () => {
   const user = useSelector((state) => state?.user);
@@ -18,11 +19,13 @@ const Sidebar = () => {
   const socketConnection = useSelector(
     (state) => state?.user?.socketConnection
   );
+  const [isFetching, setIsFetching] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
+    setIsFetching(true);
     if (socketConnection && user) {
       socketConnection.emit('sidebar', user?._id);
       socketConnection.on('conversation', (data) => {
@@ -48,9 +51,20 @@ const Sidebar = () => {
         });
 
         setAllUser(conversationUserData);
+        setIsFetching(false);
       });
     }
   }, [socketConnection, user]);
+
+  if (isFetching) {
+    return (
+      <div className='fixed top-0 bottom-0 left-0 right-0 bg-white flex justify-center items-center z-10'>
+        <div className='z-20'>
+          <Loading size={8} />
+        </div>
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -59,9 +73,9 @@ const Sidebar = () => {
   };
 
   return (
-    <div className='w-full h-full grid grid-cols-[48px,1fr] bg-white'>
-      <div className='bg-slate-100 w-12 h-full rounded-tr-lg rounded-br-lg py-5 text-slate-600 flex flex-col justify-between'>
-        <div>
+    <div className='w-full h-full grid grid-rows-[48px,1fr] lg:grid-cols-[48px,1fr] bg-white'>
+      <div className=' bg-slate-100 w-full lg:w-12 h-24 lg:h-dvh rounded-tr-lg rounded-br-lg py-5 pb-0 lg:pb-5 text-slate-600 flex lg:flex-col justify-between fixed lg:static bottom-0'>
+        <div className='flex flex-row lg:flex-col items-center'>
           <NavLink
             className={({ isActive }) =>
               `w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded ${
@@ -82,7 +96,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-row lg:flex-col items-center'>
           <button
             className='mx-auto'
             title={user.name}
@@ -108,12 +122,12 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div className='w-full'>
+      <div className='w-full h-full'>
         <div className=' h-16 flex items-center'>
           <h2 className='text-xl font-bold p-4 text-slate-800'>Message</h2>
         </div>
         <div className='bg-slate-200 p-[0.5px]'></div>
-        <div className='h-[calc(100vh-65px)] overflow-x-hidden overflow-y-auto scrollbar'>
+        <div className='h-[calc(100vh-131px)] overflow-x-hidden overflow-y-auto scrollbar '>
           {allUser.length === 0 && (
             <div className='mt-12'>
               <div className='flex justify-center items-center my-4 text-slate-500'>

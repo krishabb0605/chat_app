@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import uploadFile from '../helpers/uploadFile';
 import UserService from '../service/users.service';
 import toast from 'react-hot-toast';
+import { Loading } from '../components';
 
 const RegisterPage = () => {
   const [data, setData] = useState({
@@ -13,6 +14,8 @@ const RegisterPage = () => {
     profile_pic: '',
   });
   const [uploadPhoto, setUploadPhoto] = useState('');
+  const [isRegisterUser, setIsRegisterUser] = useState(false);
+
   const navigate = useNavigate();
 
   const handleOnChange = (event) => {
@@ -49,6 +52,8 @@ const RegisterPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
+    setIsRegisterUser(true);
+
     try {
       const response = await UserService.register(data);
       toast.success(response.data.message);
@@ -65,7 +70,7 @@ const RegisterPage = () => {
       toast.error(error?.response?.data?.message);
       console.log({ error });
     }
-    console.log({ data });
+    setIsRegisterUser(false);
   };
 
   return (
@@ -145,8 +150,8 @@ const RegisterPage = () => {
             />
           </div>
 
-          <button className='bg-primary text-lg  px-4 py-1 rounded mt-2 font-bold leading-relaxed tracking-wide text-white hover:bg-secondary'>
-            Register
+          <button className='bg-primary text-lg  px-4 py-1 rounded mt-2 font-bold leading-relaxed tracking-wide text-white hover:bg-secondary h-[40px]'>
+            {isRegisterUser ? <Loading size={8} /> : 'Register'}
           </button>
         </form>
         <p className='my-3 text-center'>

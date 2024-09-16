@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Avtar } from '../components';
+import { Avtar, Loading } from '../components';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../redux/userSlice';
 import UserService from '../service/users.service';
@@ -10,6 +10,9 @@ const CheckPasswordPage = () => {
   const [data, setData] = useState({
     password: '',
   });
+
+  const [isPasswordChecking, setIsPasswordChecking] = useState(false);
+
   const navigate = useNavigate();
   const { state } = useLocation();
   const dispatch = useDispatch();
@@ -34,6 +37,7 @@ const CheckPasswordPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
+    setIsPasswordChecking(true);
     try {
       const response = await UserService.checkPassword({
         userId: state?._id,
@@ -55,6 +59,7 @@ const CheckPasswordPage = () => {
       toast.error(error?.response?.data?.message);
       console.log({ error });
     }
+    setIsPasswordChecking(false);
   };
 
   return (
@@ -86,8 +91,8 @@ const CheckPasswordPage = () => {
             />
           </div>
 
-          <button className='bg-primary text-lg  px-4 py-1 rounded mt-2 font-bold leading-relaxed tracking-wide text-white hover:bg-secondary'>
-            Login
+          <button className='bg-primary text-lg  px-4 py-1 rounded mt-2 font-bold leading-relaxed tracking-wide text-white hover:bg-secondary h-[40px]'>
+            {isPasswordChecking ? <Loading size={8} /> : 'Login'}
           </button>
         </form>
         <p className='my-3 text-center'>

@@ -3,11 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import UserService from '../service/users.service';
 import toast from 'react-hot-toast';
 import { PiUserCircle } from 'react-icons/pi';
+import { Loading } from '../components';
 
 const CheckEmailPage = () => {
   const [data, setData] = useState({
     email: '',
   });
+
+  const [isEmailChecking, setIsEmailChecking] = useState(false);
+
   const navigate = useNavigate();
 
   const handleOnChange = (event) => {
@@ -24,6 +28,8 @@ const CheckEmailPage = () => {
     event.preventDefault();
     event.stopPropagation();
 
+    setIsEmailChecking(true);
+
     try {
       const response = await UserService.checkEmail(data);
       toast.success(response.data.message);
@@ -38,6 +44,7 @@ const CheckEmailPage = () => {
       toast.error(error?.response?.data?.message);
       console.log({ error });
     }
+    setIsEmailChecking(false);
   };
 
   return (
@@ -62,8 +69,8 @@ const CheckEmailPage = () => {
             />
           </div>
 
-          <button className='bg-primary text-lg  px-4 py-1 rounded mt-2 font-bold leading-relaxed tracking-wide text-white hover:bg-secondary'>
-            Let's Go
+          <button className='bg-primary text-lg  px-4 py-1 rounded mt-2 font-bold leading-relaxed tracking-wide text-white hover:bg-secondary h-[40px]'>
+            {isEmailChecking ? <Loading size={8} /> : `Let's Go`}
           </button>
         </form>
         <p className='my-3 text-center'>

@@ -53,7 +53,7 @@ const SearchUser = ({ onClose }) => {
 
           {loading && (
             <p>
-              <Loading />
+              <Loading size={8} />
             </p>
           )}
           {searchUser.length !== 0 &&

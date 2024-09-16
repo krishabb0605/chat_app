@@ -6,12 +6,15 @@ import UserService from '../service/users.service';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/userSlice';
+import Loading from './Loading';
 
 const EditUserDetails = ({ onClose, user }) => {
   const [data, setData] = useState({
     name: user.name,
     profile_pic: user?.profile_pic,
   });
+
+  const [isSaveData, setIsSaveData] = useState(false);
   const uploadPhotoRef = useRef();
   const dispatch = useDispatch();
 
@@ -47,7 +50,7 @@ const EditUserDetails = ({ onClose, user }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
-
+    setIsSaveData(true);
     try {
       const response = await UserService.updateUser(
         localStorage.getItem('token'),
@@ -62,6 +65,7 @@ const EditUserDetails = ({ onClose, user }) => {
       console.log(error);
       toast.error('Error while updating data', error?.response?.data?.message);
     }
+    setIsSaveData(false);
   };
 
   return (
@@ -119,10 +123,10 @@ const EditUserDetails = ({ onClose, user }) => {
               Cancle
             </button>
             <button
-              className='border-primary bg-primary text-white border px-4 py-1 rounded hover:bg-secondary'
+              className='border-primary bg-primary text-white border px-4 py-1 rounded hover:bg-secondary w-20'
               onClick={handleSubmit}
             >
-              Save
+              {isSaveData ? <Loading size={6} /> : 'Save'}
             </button>
           </div>
         </form>

@@ -68,23 +68,23 @@ const Home = () => {
       <section className={`bg-white ${!basePath && 'hidden'} lg:block`}>
         <Sidebar />
       </section>
-      {/* mesage component */}
-      <section className={`${basePath && 'hidden'} `}>
-        <Outlet />
-      </section>
 
-      <div
-        className={` justify-center items-center flex-col gap-2 hidden ${
-          !basePath ? 'hidden' : 'lg:flex'
-        } `}
-      >
-        <div>
-          <img src={logo} width={250} alt='logo' />
+      {basePath ? (
+        <div
+          className={` justify-center items-center flex-col gap-2 hidden lg:flex `}
+        >
+          <div>
+            <img src={logo} width={250} alt='logo' />
+          </div>
+          <p className='text-lg mt-2 text-slate-500'>
+            Select user to send message
+          </p>
         </div>
-        <p className='text-lg mt-2 text-slate-500'>
-          Select user to send message
-        </p>
-      </div>
+      ) : (
+        <section>
+          <Outlet />
+        </section>
+      )}
     </div>
   );
 };

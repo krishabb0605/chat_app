@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import Avtar from './Avtar';
@@ -38,6 +38,7 @@ const MessagePage = () => {
   const [loading, setLoading] = useState(false);
 
   const [allMessage, setAllMessage] = useState([]);
+  const [groupedMessages, setGroupedMessages] = useState({});
   const currentMessage = useRef(null);
 
   useEffect(() => {
@@ -47,7 +48,34 @@ const MessagePage = () => {
         block: 'end',
       });
     }
-  }, [allMessage]);
+  }, [groupedMessages]);
+
+  const getDateLabel = (date) => {
+    const today = moment().startOf('day');
+    const messageDate = moment(date).startOf('day');
+
+    if (messageDate.isSame(today, 'day')) return 'Today';
+    if (messageDate.isSame(today.subtract(1, 'day'), 'day')) return 'Yesterday';
+
+    return messageDate.format('D MMMM YYYY');
+  };
+
+  const groupMessagesByDate = useCallback((messages) => {
+    return messages.reduce((acc, message) => {
+      const dateLabel = getDateLabel(message.createdAt);
+      if (!acc[dateLabel]) {
+        acc[dateLabel] = [];
+      }
+      acc[dateLabel].push(message);
+      return acc;
+    }, {});
+  }, []);
+
+  useEffect(() => {
+    if (allMessage.length > 0) {
+      setGroupedMessages(groupMessagesByDate(allMessage));
+    }
+  }, [allMessage, groupMessagesByDate]);
 
   const handleUploadImage = async (event) => {
     const file = event.target.files[0];
@@ -187,41 +215,48 @@ const MessagePage = () => {
       <section className='h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar relative bg-slate-200 bg-opacity-50'>
         {/**all message show here */}
         <div className='flex flex-col gap-2 py-2 mx-2' ref={currentMessage}>
-          {allMessage?.map((msg, index) => {
-            return (
-              <div
-                className={` p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${
-                  user._id === msg?.msgByUserId
-                    ? 'ml-auto bg-teal-100'
-                    : 'bg-white'
-                }`}
-              >
-                <div className='w-full relative'>
-                  {msg?.imageUrl && (
-                    <img
-                      src={msg?.imageUrl}
-                      alt='uploaded'
-                      className='w-full h-full object-scale-down'
-                    />
-                  )}
-                  {msg?.videoUrl && (
-                    <video
-                      src={msg.videoUrl}
-                      className='w-full h-full object-scale-down'
-                      controls
-                    />
-                  )}
-                </div>
-                <p className='px-2'>{msg.text}</p>
-                <p className='text-xs ml-auto w-fit'>
-                  {moment(msg.createdAt).format('hh:mm')}
-                </p>
+          {Object.keys(groupedMessages).map((dateLabel) => (
+            <div key={dateLabel}>
+              <h3 className='text-lg font-semibold text-center my-2'>
+                {dateLabel}
+              </h3>
+              <div className='flex flex-col gap-2 py-2 mx-2'>
+                {groupedMessages[dateLabel].map((msg) => (
+                  <div
+                    key={msg._id}
+                    className={`p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${
+                      user._id === msg?.msgByUserId
+                        ? 'ml-auto bg-teal-100'
+                        : 'bg-white'
+                    }`}
+                  >
+                    <div className='w-full relative'>
+                      {msg?.imageUrl && (
+                        <img
+                          src={msg?.imageUrl}
+                          alt='uploaded'
+                          className='w-full h-full object-scale-down'
+                        />
+                      )}
+                      {msg?.videoUrl && (
+                        <video
+                          src={msg.videoUrl}
+                          className='w-full h-full object-scale-down'
+                          controls
+                        />
+                      )}
+                    </div>
+                    <p className='px-2'>{msg.text}</p>
+                    <p className='text-xs ml-auto w-fit'>
+                      {moment(msg.createdAt).format('hh:mm')}
+                    </p>
+                  </div>
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
-        {/**upload Image display */}
         {message.imageUrl && (
           <div className='w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden'>
             <div
@@ -263,7 +298,7 @@ const MessagePage = () => {
 
         {loading && (
           <div className='w-full h-full flex sticky bottom-0 justify-center items-center'>
-            <Loading />
+            <Loading size={8} />
           </div>
         )}
       </section>
